@@ -26,19 +26,19 @@
   </div>
 
   <!-- Control UI -->
-  <div id="controlBox" style="display:none;">
-
-    <button id="gpio1Btn" class="gpio-button" data-gpio="gpio1">GPIO 1</button>
-    <div id="gpio1Status" class="gpio-status">Status: OFF</div>
-
-    <button id="gpio2Btn" class="gpio-button" data-gpio="gpio2">GPIO 2</button>
-    <div id="gpio2Status" class="gpio-status">Status: OFF</div>
-
-    <button id="gpio3Btn" class="gpio-button" data-gpio="gpio3">GPIO 3</button>
-    <div id="gpio3Status" class="gpio-status">Status: OFF</div>
-
-    <button id="logoutBtn" class="btn logout-btn">Logout</button>
-  </div>
+<div id="controlBox" style="display:none;">
+  <h3>Servo Control</h3>
+  <input
+    type="range"
+    id="servoSlider"
+    min="0"
+    max="180"
+    value="90"
+    class="servo-slider"
+  />
+  <div id="servoAngle" class="gpio-status">Angle: 90°</div>
+  <button id="logoutBtn" class="btn logout-btn">Logout</button>
+</div>
 
 </div>
 
