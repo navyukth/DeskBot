@@ -36,17 +36,9 @@ const firebaseConfig = {
   const authMsg = document.getElementById("authMsg");
   const badge = document.getElementById("statusBadge");
 
-  const gpioButtons = {
-    gpio1: document.getElementById("gpio1Btn"),
-    gpio2: document.getElementById("gpio2Btn"),
-    gpio3: document.getElementById("gpio3Btn")
-  };
 
-  const gpioLabels = {
-    gpio1: document.getElementById("gpio1Status"),
-    gpio2: document.getElementById("gpio2Status"),
-    gpio3: document.getElementById("gpio3Status")
-  };
+  const servoSlider = document.getElementById("servoSlider");
+  const angleLabel = document.getElementById("servoAngle");
 
   // Login
   loginBtn.onclick = async () => {
@@ -71,7 +63,7 @@ const firebaseConfig = {
       controlBox.style.display = "block";
       badge.className = "status-badge online";
       badge.textContent = "Online";
-      startListeners();
+      startListener();
     } else {
       authBox.style.display = "block";
       controlBox.style.display = "none";
@@ -81,36 +73,18 @@ const firebaseConfig = {
   });
 
   // Listen to DB
-  function startListeners() {
-    ["gpio1", "gpio2", "gpio3"].forEach((key) => {
-      onValue(ref(db, "/" + key), (snapshot) => {
-        let value = snapshot.val() ? 1 : 0;
-        updateUI(key, value);
-      });
-    });
+ function startListener() {
+  const servoRef = ref(db, "/gpio8");
 
-    // Button click
-    Object.values(gpioButtons).forEach((btn) => {
-      btn.onclick = () => {
-        let gpio = btn.dataset.gpio;
-        let newState = btn.classList.contains("on") ? 0 : 1;
-        set(ref(db, "/" + gpio), newState);
-      };
-    });
-  }
+  onValue(servoRef, (snapshot) => {
+    const angle = snapshot.val() ?? 90;
+    servoSlider.value = angle;
+    angleLabel.textContent = `Angle: ${angle}°`;
+  });
 
-  // Update UI
-  function updateUI(key, val) {
-    let btn = gpioButtons[key];
-    let lab = gpioLabels[key];
-
-    if (val === 1) {
-      btn.classList.add("on");
-      lab.textContent = "Status: ON";
-      lab.style.color = "#9effae";
-    } else {
-      btn.classList.remove("on");
-      lab.textContent = "Status: OFF";
-      lab.style.color = "#d1d1d1";
-    }
-  }
+  servoSlider.oninput = () => {
+    const angle = Number(servoSlider.value);
+    angleLabel.textContent = `Angle: ${angle}°`;
+    set(servoRef, angle);
+  };
+}
